@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -63,36 +62,41 @@ func main() {
 		}
 	}
 
-	alignmentMatrix := []string{}
+	alignmentMatrixMatch := []string{}
+	alignmentMatrixMisMatch := []string{}
 
 	for i := 0; i < len(sequenceSpec)-1; i++ {
 		for j := 0; j < len(sequenceSpec[0]); j++ {
-			if sequenceSpec[i][j] == sequenceSpec[i+1][j] {
-				alignmentMatrix = append(alignmentMatrix, "1")
-			}
 			if sequenceSpec[i][j] != sequenceSpec[i+1][j] {
-				alignmentMatrix = append(alignmentMatrix, "0")
-			}
-			if sequenceSpec[i][j] == "-" {
-				continue
+				alignmentMatrixMatch = append(alignmentMatrixMatch, string(sequenceSpec[i][j]))
 			}
 		}
 	}
 
-	alignmentInt := []int{}
-
-	for i := 0; i <= len(alignmentMatrix); i++ {
-		alignmentChange, _ := strconv.Atoi(alignmentMatrix[i])
-		alignmentInt = append(alignmentInt, alignmentChange)
+	for i := 0; i < len(sequenceSpec)-1; i++ {
+		for j := 0; j < len(sequenceSpec[0]); j++ {
+			if sequenceSpec[i][j] == sequenceSpec[i+1][j] {
+				alignmentMatrixMisMatch = append(
+					alignmentMatrixMisMatch,
+					string(sequenceSpec[i][j]),
+				)
+			}
+		}
 	}
 
-	alignmentSum := 0
+	fmt.Printf(
+		"The number of the matches across the alignments blocks are: %d",
+		len(alignmentMatrixMatch),
+	)
 
-	for i := 0; i <= len(alignmentInt); i++ {
-		alignmentSum += alignmentInt[i]
-	}
+	fmt.Printf(
+		"The number of the mismatches across the alignments blocks are: %d",
+		len(alignmentMatrixMisMatch),
+	)
 
-	alignmentScore := alignmentSum / len(alignmentInt)
+	add := len(sequenceSpec[0]) / len(alignmentMatrixMatch)
 
-	fmt.Println("The sequence conservation score for the matrix alignment is: %d", alignmentScore)
+	fmt.Println(add)
+
+	fmt.Printf("The sequence conservation score for the matrix alignment is: %d", add)
 }
